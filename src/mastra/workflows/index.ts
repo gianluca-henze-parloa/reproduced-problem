@@ -1,4 +1,3 @@
-
 import { Step, Workflow } from '@mastra/core';
 import { z } from 'zod';
 
@@ -124,7 +123,9 @@ const evaluation = new Step({
     description: "Evaluate the agent's performance",
     execute: async ({ context }) => {
         console.log("evaluation_step");
-        return "retry";
+        
+
+        return Math.random() < 0.5 ? "retry" : "success";
     },
 });
 
@@ -186,11 +187,12 @@ const senseiWorkflow = new Workflow({
     .step(simulation)
     .then(evaluation)
     .while(async ({ context }) => {
-      const evaluation_status = context.steps.evaluation.status === "success" && context.steps.evaluation.output === "retry";
+      const evaluation_status = context.steps.evaluation.status === "success" && context.steps.evaluation.output.interpretation === "retry";
+      console.log("Evaluation output:", context.steps.evaluation.status === "success" && context.steps.evaluation.output.interpretation === "retry");
+      console.log("Evaluation status:", evaluation_status);
       return evaluation_status;
     }, head_of_customer_experience_step)
     .then(finalizeData);
-  
   senseiWorkflow.commit();
   
   export { senseiWorkflow };
