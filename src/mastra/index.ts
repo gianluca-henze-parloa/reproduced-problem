@@ -1,5 +1,11 @@
+import { createLogger } from "@mastra/core";
+import { Mastra } from "@mastra/core";
+import { senseiWorkflow } from "./workflows";
 
-import { Mastra } from '@mastra/core';
-
-export const mastra = new Mastra()
-        
+export const mastra = new Mastra({
+    workflows: { senseiWorkflow },
+    logger: createLogger({
+      name: 'Mastra',
+      level: 'info',
+    }),
+  });   
